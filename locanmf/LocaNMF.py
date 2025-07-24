@@ -8,6 +8,8 @@ import numpy as np
 from scipy import spatial
 from sklearn.utils.extmath import randomized_svd
 
+from . import DEFAULT_DEVICE
+
 # Custom Module Imports
 from .video import RegionMetadata
 from .video import LowRankVideo
@@ -19,7 +21,7 @@ def adaptive_fit(video_mats,
                  valid_mask,
                  region_map,
                  rank_range=(2, 14, 1),
-                 device='cuda',
+                 device=DEFAULT_DEVICE,
                  **kwargs):
     """Perform LocaNMF Of A Low Rank Video With Automated Param Tuning
 
@@ -28,7 +30,7 @@ def adaptive_fit(video_mats,
         valid_mask: valid brain mask
         region_map: preprocessed allen Dorsal Map
         rank_range: rank range
-        device: computation device, default is cuda
+        device: computation device, default is DEFAULT_DEVICE
         **kwargs: optional additional input arguments
 
     Return:
@@ -115,7 +117,7 @@ def extract_region_metadata(valid_mask,
 def factor_region_videos(video_mats,
                          region_masks,
                          max_rank,
-                         device='cuda'):
+                         device=DEFAULT_DEVICE):
     """Perform within-region SVD for use in full-fov initialization
 
     Parameter:
@@ -171,7 +173,7 @@ def rank_linesearch(low_rank_video,
                     nnt=False,
                     verbose=[False, False, False],
                     indent='',
-                    device='cuda',
+                    device=DEFAULT_DEVICE,
                     **kwargs):
     """Increment Per-Region Rank Until Local R^2 Fits Are Sufficiently High
 
@@ -226,6 +228,7 @@ def rank_linesearch(low_rank_video,
     for itr in range(maxiter_rank):
         if verbose[0]:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|--v Rank Line Search Iteration {}'.format(itr))
             print(indent + '|  |--v Initialization')
             itr_t0 = time()
@@ -247,6 +250,7 @@ def rank_linesearch(low_rank_video,
         nmf_factors.set_from_regions(region_factors, region_metadata)
         if verbose[0]:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  |  \'-total : %f seconds' % (time()-step_t0))
             print(indent + '|  |--v Lambda Line Search')
             step_t0 = time()
@@ -262,6 +266,7 @@ def rank_linesearch(low_rank_video,
                                          **kwargs)
         if verbose[0]:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  |  \'- {:g} iterations took {:g} seconds'.format(lambda_iters, time()-step_t0))
             step_t0 = time()
 
@@ -274,11 +279,13 @@ def rank_linesearch(low_rank_video,
                                                           **kwargs)
         if verbose[0]:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  |--> R2 Evaluation took {:g} seconds'.format(time()-step_t0))
 
         # Update Progress
         if verbose[0]:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  \'-total : {:g} seconds'.format(time()-itr_t0))
         if not np.any(refit_flags):
             break
@@ -291,7 +298,7 @@ def init_from_low_rank_video(low_rank_video,
                              nnt=False,
                              verbose=False,
                              indent='',
-                             device='cuda',
+                             device=DEFAULT_DEVICE,
                              **kwargs):
     """Initialize Region Using NMF On Low Rank Approx
 
@@ -327,7 +334,7 @@ def evaluate_fit_to_region(low_rank_video,
                            region_mask,
                            r2_thresh=.98,
                            sample_prop=(1, 1),
-                           device='cuda',
+                           device=DEFAULT_DEVICE,
                            **kwargs):
     """Compute Coef Of Determination Of Current Fit
 
@@ -402,7 +409,7 @@ def lambda_linesearch(video,
                       nnt=False,
                       verbose=False,
                       indent='',
-                      device='cuda',
+                      device=DEFAULT_DEVICE,
                       **kwargs):
     """Tune Lambdas Until Components Are Sufficiently Region-Localized
 
@@ -438,6 +445,7 @@ def lambda_linesearch(video,
     for itr in range(maxiter_lambda):
         if verbose[0]:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|--v Lambda Line Search Iteration {:g}'.format(itr+1))
             itr_t0 = time()
             step_t0 = itr_t0
@@ -448,6 +456,7 @@ def lambda_linesearch(video,
                   out=localized_factorization.distance.scratch)
         if verbose[0]:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  |--> Setting Distmat took {:g} seconds'.format(time()-step_t0))
             print(indent + '|  |--v HALS Iterations')
             step_t0 = time()
@@ -462,6 +471,7 @@ def lambda_linesearch(video,
                           **kwargs)
         if verbose[0]:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  |  \'- {:g} iterations took : {:g} seconds'.format(hals_iters, time()-step_t0))
             step_t0 = time()
 
@@ -493,11 +503,13 @@ def lambda_linesearch(video,
             breakout = True
         if verbose[0]:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  |--> Lambda update took {:g} seconds'.format(time()-step_t0))
 
         # Update Progress
         if verbose[0]:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  \'-total : {:g} seconds'.format(time()-itr_t0))
         if breakout:
             break
@@ -511,7 +523,7 @@ def hals(video,
          nnt=False,
          verbose=False,
          indent='',
-         device='cuda',
+         device=DEFAULT_DEVICE,
          **kwargs):
     """Perform maxiter HALS updates To Temporal & Spatial Components
 
@@ -532,6 +544,7 @@ def hals(video,
     for itr in range(maxiter_hals):
         if verbose:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|--v HALS Iteration {:g}'.format(itr+1))
             itr_t0 = time()
             step_t0 = itr_t0
@@ -540,6 +553,7 @@ def hals(video,
         video_factorization.update_spatial(video)
         if verbose:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  |--> Spatial update took {:g} seconds'.format(time()-step_t0))
             step_t0 = itr_t0
 
@@ -548,6 +562,7 @@ def hals(video,
         video_factorization.normalize_spatial()
         if verbose:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  |--> Component prune after spatial update took {:g} seconds'.format(time()-step_t0))
             step_t0 = itr_t0
 
@@ -555,6 +570,7 @@ def hals(video,
         video_factorization.update_temporal(video, nonnegative=nnt)
         if verbose:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  |--> Temporal update took {:g} seconds'.format(time()-step_t0))
             print(indent + '|  \'-total : {:g} seconds'.format(time()-itr_t0))
             
@@ -562,6 +578,7 @@ def hals(video,
         video_factorization.prune_empty_components()
         if verbose:
             if device=='cuda': torch.cuda.synchronize()
+            elif device=='mps': torch.mps.synchronize()
             print(indent + '|  |--> Component prune after temporal update took {:g} seconds'.format(time()-step_t0))
             step_t0 = itr_t0
 
