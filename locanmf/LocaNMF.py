@@ -16,6 +16,19 @@ from .video import LowRankVideo
 from .demix import HalsNMF
 from .demix import LocalizedNMF
 
+__all__ = [
+    "adaptive_fit",
+    "extract_region_metadata",
+    "factor_region_videos",
+    "rank_linesearch",
+    "init_from_low_rank_video",
+    "evaluate_fit_to_region",
+    "lambda_linesearch",
+    "hals",
+    "version",
+    "LocaNMF",
+]
+
 
 def adaptive_fit(video_mats,
                  valid_mask,
@@ -592,3 +605,4 @@ def version():
 
 # for backward-compatibility / external import
 LocaNMF = LocalizedNMF
+
