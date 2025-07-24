@@ -10,4 +10,4 @@ DEFAULT_DEVICE = (
     "cpu"
 )
 
-from .LocaNMF import LocalizedNMF as LocaNMF
+from .LocaNMF import LocaNMF
