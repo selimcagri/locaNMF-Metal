@@ -64,8 +64,10 @@ version = 1.1
 >>>
 ```
 
-Please download the **demo** folder in this repository to your computer and 
-walk through the `demo_simulation.ipynb` notebook to try out the software. 
+Please download the **demo** folder in this repository to your computer and
+walk through the `demo_simulation.ipynb` notebook to try out the software.
+The notebook automatically selects CUDA, Apple's MPS backend, or CPU at runtime
+based on the available hardware.
 
 To run the notebook, in terminal, change directory to the downloaded **demo** folder,
 then execute,
