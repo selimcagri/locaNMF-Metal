@@ -30,7 +30,7 @@ def adaptive_fit(video_mats,
         valid_mask: valid brain mask
         region_map: preprocessed allen Dorsal Map
         rank_range: rank range
-        device: computation device, default is cuda
+        device: computation device, default is DEFAULT_DEVICE
         **kwargs: optional additional input arguments
 
     Return:
