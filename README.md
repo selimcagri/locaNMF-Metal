@@ -24,11 +24,18 @@ by executing the following scripts. A list of base environment packages will be 
 conda list
 ```
 
-<!-- pytorch only requires nvidia driver, doesn't require to install cuda. -->
-Create a new environment for LocaNMF and install LocaNMF software and all of its dependencies.
+<!-- PyTorch only requires the appropriate drivers; CUDA installation is optional. -->
+Create a new environment using a modern version of Python and install PyTorch with MPS support.
+```bash
+conda create -n locanmf python=3.10
+conda activate locanmf
+pip install torch torchvision torchaudio
 ```
-conda create -n locanmf python=3.6 locanmf -c ss5513 -c pytorch
+Verify that the MPS backend is available
+```bash
+python -c "import torch; print(torch.backends.mps.is_available())"
 ```
+For more details see [MPS_INSTRUCTIONS.md](./MPS_INSTRUCTIONS.md).
 
 ## Use LocaNMF
 
@@ -91,7 +98,8 @@ Please follow the demo notebook in the current folder to try out LocaNMF.
 
 ## (OPTIONAL) Compiling The Cuda Extension
 
-This section is optional and for computation performance benefit. 
+This section is optional and for computation performance benefit. Apple Silicon
+(M1/M2) users running with the MPS backend do not need this extension.
 PyTorch provides an excellent set of general programming abstractions for writing high level code that can use both CPUs & GPUs.
 However, these abstractions do not provide the flexibility required to implement certain computations efficiently on the GPU.
 In order to mitigate a significant bottleneck, we provide a cuda implementation and use a 
