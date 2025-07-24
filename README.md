@@ -7,8 +7,8 @@ Squares (HALS), and outputs components that are signiﬁcantly more interpretabl
 or SVD-based techniques. Read more about this method and the results it provides in our bioRxiv : 
 [Saxena et al., 2019](https://www.biorxiv.org/content/10.1101/650093v2)!
  
-It is built on top of PyTorch, written in Python and C++, and is capable to run on either CPU or
-Nvidia CUDA-enabled GPU. To run LocaNMF on Nvidia GPU, a Nvidia 
+It is built on top of PyTorch, written in Python and C++, and is capable to run on CPU,
+Apple Silicon using PyTorch's Metal (MPS) backend, or Nvidia CUDA-enabled GPUs. To run LocaNMF on Nvidia GPU, a Nvidia
 [CUDA-enabled GPU](https://developer.nvidia.com/cuda-gpus) 
 is required and the latest version 
 [Nvidia Driver](https://www.nvidia.com/Download/index.aspx?lang=en-us) (version > 418.x)
