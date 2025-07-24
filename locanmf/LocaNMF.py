@@ -590,4 +590,5 @@ def version():
     """
     print('version = 1.1')
 
-
+# for backward-compatibility / external import
+LocaNMF = LocalizedNMF
