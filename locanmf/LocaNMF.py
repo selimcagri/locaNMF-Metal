@@ -604,7 +604,5 @@ def version():
     print('version = 1.1')
 
 # for backward-compatibility / external import
-class LocaNMF(LocalizedNMF):
-    """Backwards-compatible alias for :class:`LocalizedNMF`."""
-    pass
+LocaNMF = LocalizedNMF
 
