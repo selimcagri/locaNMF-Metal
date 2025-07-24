@@ -606,3 +606,53 @@ def version():
 # for backward-compatibility / external import
 LocaNMF = LocalizedNMF
 
+# for backward-compatibility / external import
+class LocaNMF(LocalizedNMF):
+    """Backwards-compatible subclass exposing module helpers as static methods."""
+    
+    @staticmethod
+    def adaptive_fit(*args, **kwargs):
+        from .LocaNMF import adaptive_fit as _f
+        return _f(*args, **kwargs)
+
+    @staticmethod
+    def extract_region_metadata(*args, **kwargs):
+        from .LocaNMF import extract_region_metadata as _f
+        return _f(*args, **kwargs)
+
+    @staticmethod
+    def factor_region_videos(*args, **kwargs):
+        from .LocaNMF import factor_region_videos as _f
+        return _f(*args, **kwargs)
+
+    @staticmethod
+    def rank_linesearch(*args, **kwargs):
+        from .LocaNMF import rank_linesearch as _f
+        return _f(*args, **kwargs)
+
+    @staticmethod
+    def init_from_low_rank_video(*args, **kwargs):
+        from .LocaNMF import init_from_low_rank_video as _f
+        return _f(*args, **kwargs)
+
+    @staticmethod
+    def evaluate_fit_to_region(*args, **kwargs):
+        from .LocaNMF import evaluate_fit_to_region as _f
+        return _f(*args, **kwargs)
+
+    @staticmethod
+    def lambda_linesearch(*args, **kwargs):
+        from .LocaNMF import lambda_linesearch as _f
+        return _f(*args, **kwargs)
+
+    @staticmethod
+    def hals(*args, **kwargs):
+        from .LocaNMF import hals as _f
+        return _f(*args, **kwargs)
+
+    @staticmethod
+    def version(*args, **kwargs):
+        from .LocaNMF import version as _f
+        return _f(*args, **kwargs)
+
+
