@@ -1,5 +1,5 @@
 name = "demix"
-__all__ = ["LocaNMF"]
+__all__ = ["LocaNMF", "DEFAULT_DEVICE"]
 
 import torch
 
@@ -10,5 +10,4 @@ DEFAULT_DEVICE = (
     "cpu"
 )
 
-# import LocaNMF
-
+from .LocaNMF import LocaNMF
