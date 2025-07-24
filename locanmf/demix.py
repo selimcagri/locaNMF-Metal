@@ -3,6 +3,8 @@ from abc import abstractmethod
 import torch
 import numpy as np
 
+from . import DEFAULT_DEVICE
+
 try:
     import cuhals
     use_cuhals = True
@@ -131,7 +133,7 @@ class BaseNMF(VideoFactorizer):
     def __init__(self,
                  max_num_components,
                  video_shape,
-                 device='cuda'):
+                 device=DEFAULT_DEVICE):
         """ Allocate necessary buffers
 
         Parameter:
@@ -335,7 +337,7 @@ class LocalizedNMF(SpatialHals, TemporalHals, BaseNMF):
     def __init__(self,
                  max_num_components,
                  video_shape,
-                 device='cuda'):
+                 device=DEFAULT_DEVICE):
         """ allocate neccesary buffers & copy initialization from host
 
         Parameter:

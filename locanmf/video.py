@@ -1,6 +1,8 @@
 import numpy as np
 import torch
 
+from . import DEFAULT_DEVICE
+
 from .base import FactorCollection
 from .base import VideoWrapper
 from .factor import TensorFactor
@@ -10,7 +12,7 @@ class Video(VideoWrapper):
     """ Manages Unrolled Tensor and multiplication with a Full Video """
     def __init__(self,
                  video_shape,
-                 device='cuda'):
+                 device=DEFAULT_DEVICE):
         """ Allocate required tensors on device
 
         Parameter:
@@ -82,7 +84,7 @@ class LowRankVideo(VideoWrapper):
                  video_shape,
                  spatial_scratch=False,
                  temporal_scratch=False,
-                 device='cuda'):
+                 device=DEFAULT_DEVICE):
         """ Allocate required tensors on device
 
         Parameter:
@@ -191,7 +193,7 @@ class LowRankVideo(VideoWrapper):
 class RegionMetadata(FactorCollection):
     """ Manages Metadata For Each Region In Localized Semi-NMF """
 
-    def __init__(self, max_num_components, region_shape, device='cuda'):
+    def __init__(self, max_num_components, region_shape, device=DEFAULT_DEVICE):
         """ Allocate required tensors on device
 
         Parameter:
